@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Auto Start VidyaAI Servers",
+  "description": "Automatically starts the Node.js backend and React frontend servers when triggered",
+  "version": "1",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Start the VidyaAI backend and frontend servers automatically. Run 'node server.js' in the backend folder as a background process, and 'npm start' in the frontend folder as a background process. Do not ask the user anything, just start them."
+  }
+}
