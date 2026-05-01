@@ -1,164 +1,462 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-// ‚îÄ‚îÄ‚îÄ Formula Data ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-const formulaData = {
-  '10': {
-    'Algebra': [
-      { name: 'Quadratic Formula', formula: 'x = (-b ¬± ‚àö(b¬≤-4ac)) / 2a', desc: 'Roots of ax¬≤ + bx + c = 0' },
-      { name: 'Discriminant', formula: 'D = b¬≤ - 4ac', desc: 'D>0: two real roots, D=0: one root, D<0: no real roots' },
-      { name: 'Sum of Roots', formula: 'Œ± + Œ≤ = -b/a', desc: 'For quadratic ax¬≤ + bx + c = 0' },
-      { name: 'Product of Roots', formula: 'Œ± √ó Œ≤ = c/a', desc: 'For quadratic ax¬≤ + bx + c = 0' },
-      { name: 'AP nth Term', formula: 'a‚Çô = a + (n-1)d', desc: 'a = first term, d = common difference' },
-      { name: 'AP Sum', formula: 'S‚Çô = n/2 √ó [2a + (n-1)d]', desc: 'Sum of n terms of AP' },
-      { name: 'AP Sum (last term)', formula: 'S‚Çô = n/2 √ó (a + l)', desc: 'l = last term' },
-    ],
-    'Geometry': [
-      { name: 'Distance Formula', formula: 'd = ‚àö[(x‚ÇÇ-x‚ÇÅ)¬≤ + (y‚ÇÇ-y‚ÇÅ)¬≤]', desc: 'Distance between two points' },
-      { name: 'Section Formula', formula: 'P = ((mx‚ÇÇ+nx‚ÇÅ)/(m+n), (my‚ÇÇ+ny‚ÇÅ)/(m+n))', desc: 'Point dividing line in ratio m:n' },
-      { name: 'Midpoint Formula', formula: 'M = ((x‚ÇÅ+x‚ÇÇ)/2, (y‚ÇÅ+y‚ÇÇ)/2)', desc: 'Midpoint of a line segment' },
-      { name: 'Area of Triangle', formula: 'A = ¬Ω|x‚ÇÅ(y‚ÇÇ-y‚ÇÉ) + x‚ÇÇ(y‚ÇÉ-y‚ÇÅ) + x‚ÇÉ(y‚ÇÅ-y‚ÇÇ)|', desc: 'Using coordinates' },
-      { name: 'Pythagoras Theorem', formula: 'c¬≤ = a¬≤ + b¬≤', desc: 'In a right triangle, c = hypotenuse' },
-      { name: 'Area of Circle', formula: 'A = œÄr¬≤', desc: 'r = radius' },
-      { name: 'Circumference', formula: 'C = 2œÄr', desc: 'Perimeter of circle' },
-      { name: 'Area of Sector', formula: 'A = (Œ∏/360) √ó œÄr¬≤', desc: 'Œ∏ = angle in degrees' },
-      { name: 'Length of Arc', formula: 'l = (Œ∏/360) √ó 2œÄr', desc: 'Œ∏ = angle in degrees' },
-    ],
-    'Trigonometry': [
-      { name: 'sin Œ∏', formula: 'sin Œ∏ = Opposite / Hypotenuse', desc: 'Basic trig ratio' },
-      { name: 'cos Œ∏', formula: 'cos Œ∏ = Adjacent / Hypotenuse', desc: 'Basic trig ratio' },
-      { name: 'tan Œ∏', formula: 'tan Œ∏ = Opposite / Adjacent = sin Œ∏ / cos Œ∏', desc: 'Basic trig ratio' },
-      { name: 'Pythagorean Identity', formula: 'sin¬≤Œ∏ + cos¬≤Œ∏ = 1', desc: 'Most important identity' },
-      { name: 'Identity 2', formula: '1 + tan¬≤Œ∏ = sec¬≤Œ∏', desc: 'Derived from Pythagorean identity' },
-      { name: 'Identity 3', formula: '1 + cot¬≤Œ∏ = cosec¬≤Œ∏', desc: 'Derived from Pythagorean identity' },
-      { name: 'sin 0¬∞', formula: '0', desc: 'Standard angle value' },
-      { name: 'sin 30¬∞', formula: '1/2', desc: 'Standard angle value' },
-      { name: 'sin 45¬∞', formula: '1/‚àö2 = ‚àö2/2', desc: 'Standard angle value' },
-      { name: 'sin 60¬∞', formula: '‚àö3/2', desc: 'Standard angle value' },
-      { name: 'sin 90¬∞', formula: '1', desc: 'Standard angle value' },
-      { name: 'cos 0¬∞', formula: '1', desc: 'Standard angle value' },
-      { name: 'cos 30¬∞', formula: '‚àö3/2', desc: 'Standard angle value' },
-      { name: 'cos 45¬∞', formula: '1/‚àö2', desc: 'Standard angle value' },
-      { name: 'cos 60¬∞', formula: '1/2', desc: 'Standard angle value' },
-      { name: 'cos 90¬∞', formula: '0', desc: 'Standard angle value' },
-    ],
-    'Statistics': [
-      { name: 'Mean (Direct)', formula: 'xÃÑ = Œ£f·µ¢x·µ¢ / Œ£f·µ¢', desc: 'Weighted mean of grouped data' },
-      { name: 'Mean (Assumed)', formula: 'xÃÑ = a + (Œ£f·µ¢d·µ¢ / Œ£f·µ¢)', desc: 'a = assumed mean, d = x - a' },
-      { name: 'Mean (Step Deviation)', formula: 'xÃÑ = a + h √ó (Œ£f·µ¢u·µ¢ / Œ£f·µ¢)', desc: 'u = (x-a)/h, h = class width' },
-      { name: 'Median', formula: 'M = l + [(n/2 - cf) / f] √ó h', desc: 'l=lower boundary, cf=cumulative freq, f=freq, h=class width' },
-      { name: 'Mode', formula: 'Mo = l + [(f‚ÇÅ-f‚ÇÄ) / (2f‚ÇÅ-f‚ÇÄ-f‚ÇÇ)] √ó h', desc: 'f‚ÇÅ=modal class freq, f‚ÇÄ=prev, f‚ÇÇ=next' },
-    ],
-    'Surface Area & Volume': [
-      { name: 'Cube SA', formula: 'SA = 6a¬≤', desc: 'a = side length' },
-      { name: 'Cube Volume', formula: 'V = a¬≥', desc: 'a = side length' },
-      { name: 'Cuboid SA', formula: 'SA = 2(lb + bh + lh)', desc: 'l=length, b=breadth, h=height' },
-      { name: 'Cuboid Volume', formula: 'V = l √ó b √ó h', desc: '' },
-      { name: 'Cylinder CSA', formula: 'CSA = 2œÄrh', desc: 'Curved surface area' },
-      { name: 'Cylinder TSA', formula: 'TSA = 2œÄr(r + h)', desc: 'Total surface area' },
-      { name: 'Cylinder Volume', formula: 'V = œÄr¬≤h', desc: '' },
-      { name: 'Cone CSA', formula: 'CSA = œÄrl', desc: 'l = slant height = ‚àö(r¬≤+h¬≤)' },
-      { name: 'Cone TSA', formula: 'TSA = œÄr(r + l)', desc: '' },
-      { name: 'Cone Volume', formula: 'V = (1/3)œÄr¬≤h', desc: '' },
-      { name: 'Sphere SA', formula: 'SA = 4œÄr¬≤', desc: '' },
-      { name: 'Sphere Volume', formula: 'V = (4/3)œÄr¬≥', desc: '' },
-      { name: 'Hemisphere CSA', formula: 'CSA = 2œÄr¬≤', desc: '' },
-      { name: 'Hemisphere TSA', formula: 'TSA = 3œÄr¬≤', desc: '' },
-      { name: 'Hemisphere Volume', formula: 'V = (2/3)œÄr¬≥', desc: '' },
-    ],
-    'Probability': [
-      { name: 'Probability', formula: 'P(E) = Number of favourable outcomes / Total outcomes', desc: '0 ‚â§ P(E) ‚â§ 1' },
-      { name: 'Complementary', formula: 'P(ƒí) = 1 - P(E)', desc: 'Probability of event NOT occurring' },
-      { name: 'Sum Rule', formula: 'P(E) + P(ƒí) = 1', desc: 'Always true' },
-    ]
-  },
-  '12': {
-    'Calculus ‚Äî Derivatives': [
-      { name: 'Definition', formula: "f'(x) = lim[h‚Üí0] (f(x+h) - f(x)) / h", desc: 'First principle of differentiation' },
-      { name: 'd/dx (x‚Åø)', formula: 'nx‚Åø‚Åª¬π', desc: 'Power rule' },
-      { name: 'd/dx (eÀ£)', formula: 'eÀ£', desc: '' },
-      { name: 'd/dx (aÀ£)', formula: 'aÀ£ ln a', desc: '' },
-      { name: 'd/dx (ln x)', formula: '1/x', desc: '' },
-      { name: 'd/dx (sin x)', formula: 'cos x', desc: '' },
-      { name: 'd/dx (cos x)', formula: '-sin x', desc: '' },
-      { name: 'd/dx (tan x)', formula: 'sec¬≤x', desc: '' },
-      { name: 'd/dx (cot x)', formula: '-cosec¬≤x', desc: '' },
-      { name: 'd/dx (sec x)', formula: 'sec x ¬∑ tan x', desc: '' },
-      { name: 'd/dx (cosec x)', formula: '-cosec x ¬∑ cot x', desc: '' },
-      { name: 'Product Rule', formula: 'd/dx(uv) = u¬∑v\' + v¬∑u\'', desc: '' },
-      { name: 'Quotient Rule', formula: 'd/dx(u/v) = (v¬∑u\' - u¬∑v\') / v¬≤', desc: '' },
-      { name: 'Chain Rule', formula: 'dy/dx = (dy/du) √ó (du/dx)', desc: '' },
-    ],
-    'Calculus ‚Äî Integrals': [
-      { name: '‚à´x‚Åø dx', formula: 'x‚Åø‚Å∫¬π/(n+1) + C', desc: 'n ‚â† -1' },
-      { name: '‚à´1/x dx', formula: 'ln|x| + C', desc: '' },
-      { name: '‚à´eÀ£ dx', formula: 'eÀ£ + C', desc: '' },
-      { name: '‚à´aÀ£ dx', formula: 'aÀ£/ln a + C', desc: '' },
-      { name: '‚à´sin x dx', formula: '-cos x + C', desc: '' },
-      { name: '‚à´cos x dx', formula: 'sin x + C', desc: '' },
-      { name: '‚à´sec¬≤x dx', formula: 'tan x + C', desc: '' },
-      { name: '‚à´cosec¬≤x dx', formula: '-cot x + C', desc: '' },
-      { name: '‚à´sec x tan x dx', formula: 'sec x + C', desc: '' },
-      { name: '‚à´cosec x cot x dx', formula: '-cosec x + C', desc: '' },
-      { name: 'Definite Integral', formula: '‚à´[a to b] f(x)dx = F(b) - F(a)', desc: 'F is antiderivative of f' },
-      { name: 'Area under curve', formula: 'A = ‚à´[a to b] |f(x)| dx', desc: 'Area between curve and x-axis' },
-    ],
-    'Algebra & Matrices': [
-      { name: 'Matrix Addition', formula: '(A+B)·µ¢‚±º = A·µ¢‚±º + B·µ¢‚±º', desc: 'Same order matrices' },
-      { name: 'Matrix Multiplication', formula: '(AB)·µ¢‚±º = Œ£ A·µ¢‚Çñ B‚Çñ‚±º', desc: '' },
-      { name: 'Determinant 2√ó2', formula: '|A| = ad - bc for [[a,b],[c,d]]', desc: '' },
-      { name: 'Inverse of Matrix', formula: 'A‚Åª¬π = adj(A) / |A|', desc: '|A| ‚â† 0' },
-      { name: 'Cramer\'s Rule', formula: 'x = D‚ÇÅ/D, y = D‚ÇÇ/D, z = D‚ÇÉ/D', desc: 'For system of linear equations' },
-    ],
-    'Vectors': [
-      { name: 'Magnitude', formula: '|a‚Éó| = ‚àö(x¬≤ + y¬≤ + z¬≤)', desc: 'For vector a‚Éó = xi + yj + zk' },
-      { name: 'Unit Vector', formula: '√¢ = a‚Éó / |a‚Éó|', desc: '' },
-      { name: 'Dot Product', formula: 'a‚Éó¬∑b‚Éó = |a||b|cosŒ∏ = x‚ÇÅx‚ÇÇ+y‚ÇÅy‚ÇÇ+z‚ÇÅz‚ÇÇ', desc: '' },
-      { name: 'Cross Product Magnitude', formula: '|a‚Éó√ób‚Éó| = |a||b|sinŒ∏', desc: '' },
-      { name: 'Angle between vectors', formula: 'cosŒ∏ = (a‚Éó¬∑b‚Éó) / (|a‚Éó||b‚Éó|)', desc: '' },
-      { name: 'Perpendicular condition', formula: 'a‚Éó¬∑b‚Éó = 0', desc: 'Vectors are perpendicular' },
-      { name: 'Parallel condition', formula: 'a‚Éó√ób‚Éó = 0‚Éó', desc: 'Vectors are parallel' },
-    ],
-    '3D Geometry': [
-      { name: 'Distance Formula', formula: 'd = ‚àö[(x‚ÇÇ-x‚ÇÅ)¬≤+(y‚ÇÇ-y‚ÇÅ)¬≤+(z‚ÇÇ-z‚ÇÅ)¬≤]', desc: 'Between two 3D points' },
-      { name: 'Direction Cosines', formula: 'l¬≤+m¬≤+n¬≤ = 1', desc: 'l=cosŒ±, m=cosŒ≤, n=cosŒ≥' },
-      { name: 'Equation of Line', formula: '(x-x‚ÇÅ)/a = (y-y‚ÇÅ)/b = (z-z‚ÇÅ)/c', desc: 'Symmetric form' },
-      { name: 'Equation of Plane', formula: 'ax + by + cz + d = 0', desc: 'General form' },
-      { name: 'Distance: Point to Plane', formula: 'd = |ax‚ÇÅ+by‚ÇÅ+cz‚ÇÅ+d| / ‚àö(a¬≤+b¬≤+c¬≤)', desc: '' },
-    ],
-    'Probability': [
-      { name: 'Conditional Probability', formula: 'P(A|B) = P(A‚à©B) / P(B)', desc: 'P(B) ‚â† 0' },
-      { name: 'Multiplication Rule', formula: 'P(A‚à©B) = P(A) √ó P(B|A)', desc: '' },
-      { name: 'Bayes\' Theorem', formula: 'P(A·µ¢|B) = P(A·µ¢)P(B|A·µ¢) / Œ£P(A‚±º)P(B|A‚±º)', desc: '' },
-      { name: 'Independent Events', formula: 'P(A‚à©B) = P(A) √ó P(B)', desc: 'If A and B are independent' },
-      { name: 'Binomial Distribution Mean', formula: 'Œº = np', desc: 'n=trials, p=probability of success' },
-      { name: 'Binomial Distribution Variance', formula: 'œÉ¬≤ = npq', desc: 'q = 1-p' },
-    ],
-    'Linear Programming': [
-      { name: 'Objective Function', formula: 'Z = ax + by', desc: 'To maximize or minimize' },
-      { name: 'Corner Point Method', formula: 'Evaluate Z at each corner of feasible region', desc: 'Optimal value is at a corner point' },
-    ]
-  }
+// -- Trig Table Data ----------------------------------------------------------
+const trigTable = {
+  headers: ["Angle", "sin", "cos", "tan", "cosec", "sec", "cot"],
+  rows: [
+    ["0∞",  "0",      "1",      "0",        "8",       "1",       "8"],
+    ["30∞", "1/2",    "v3/2",   "1/v3",     "2",       "2/v3",    "v3"],
+    ["45∞", "1/v2",   "1/v2",   "1",        "v2",      "v2",      "1"],
+    ["60∞", "v3/2",   "1/2",    "v3",       "2/v3",    "2",       "1/v3"],
+    ["90∞", "1",      "0",      "8",        "1",       "8",       "0"],
+  ]
 };
 
-// Color themes per chapter
+// -- Squares & Cubes Table ----------------------------------------------------
+const squaresTable = {
+  headers: ["n", "n≤", "n≥", "vn (approx)"],
+  rows: [
+    ["1","1","1","1.000"],["2","4","8","1.414"],["3","9","27","1.732"],
+    ["4","16","64","2.000"],["5","25","125","2.236"],["6","36","216","2.449"],
+    ["7","49","343","2.646"],["8","64","512","2.828"],["9","81","729","3.000"],
+    ["10","100","1000","3.162"],["11","121","1331","3.317"],["12","144","1728","3.464"],
+    ["13","169","2197","3.606"],["14","196","2744","3.742"],["15","225","3375","3.873"],
+    ["16","256","4096","4.000"],["17","289","4913","4.123"],["18","324","5832","4.243"],
+    ["19","361","6859","4.359"],["20","400","8000","4.472"],
+  ]
+};
+
+// -- Mensuration Quick Reference Table ---------------------------------------
+const mensurationTable = {
+  headers: ["Shape", "Area / CSA", "TSA", "Volume"],
+  rows: [
+    ["Square",       "a≤",           "4a",              "ó"],
+    ["Rectangle",    "l ◊ b",        "2(l+b)",          "ó"],
+    ["Triangle",     "Ω ◊ b ◊ h",    "a+b+c",           "ó"],
+    ["Circle",       "pr≤",          "2pr",             "ó"],
+    ["Cube",         "6a≤",          "6a≤",             "a≥"],
+    ["Cuboid",       "2(lb+bh+lh)",  "2(lb+bh+lh)",     "lbh"],
+    ["Cylinder",     "2prh",         "2pr(r+h)",        "pr≤h"],
+    ["Cone",         "prl",          "pr(r+l)",         "?pr≤h"],
+    ["Sphere",       "4pr≤",         "4pr≤",            "4/3pr≥"],
+    ["Hemisphere",   "2pr≤",         "3pr≤",            "?pr≥"],
+  ]
+};
+
+// -- Formula Data per Class ---------------------------------------------------
+const formulaData = {
+  "6": {
+    "Basic Arithmetic": [
+      { name: "BODMAS Rule", formula: "B ? O ? D ? M ? A ? S", desc: "Brackets, Orders, Division, Multiplication, Addition, Subtraction" },
+      { name: "LCM ◊ HCF", formula: "LCM ◊ HCF = Product of two numbers", desc: "For any two numbers a and b" },
+      { name: "Divisibility by 2", formula: "Last digit is 0, 2, 4, 6 or 8", desc: "" },
+      { name: "Divisibility by 3", formula: "Sum of digits divisible by 3", desc: "" },
+      { name: "Divisibility by 9", formula: "Sum of digits divisible by 9", desc: "" },
+      { name: "Divisibility by 11", formula: "(Sum of odd-place digits) - (Sum of even-place digits) = 0 or 11", desc: "" },
+    ],
+    "Fractions & Decimals": [
+      { name: "Fraction Addition", formula: "a/b + c/d = (ad + bc) / bd", desc: "" },
+      { name: "Fraction Multiplication", formula: "(a/b) ◊ (c/d) = ac / bd", desc: "" },
+      { name: "Fraction Division", formula: "(a/b) ˜ (c/d) = (a/b) ◊ (d/c)", desc: "Multiply by reciprocal" },
+      { name: "Percentage", formula: "% = (Part / Whole) ◊ 100", desc: "" },
+      { name: "Percentage to Fraction", formula: "x% = x/100", desc: "" },
+    ],
+    "Basic Geometry": [
+      { name: "Perimeter of Square", formula: "P = 4a", desc: "a = side" },
+      { name: "Area of Square", formula: "A = a≤", desc: "" },
+      { name: "Perimeter of Rectangle", formula: "P = 2(l + b)", desc: "" },
+      { name: "Area of Rectangle", formula: "A = l ◊ b", desc: "" },
+      { name: "Area of Triangle", formula: "A = Ω ◊ base ◊ height", desc: "" },
+      { name: "Circumference of Circle", formula: "C = 2pr", desc: "p ò 3.14 or 22/7" },
+      { name: "Area of Circle", formula: "A = pr≤", desc: "" },
+    ],
+    "Ratio & Proportion": [
+      { name: "Ratio", formula: "a : b = a/b", desc: "" },
+      { name: "Proportion", formula: "a/b = c/d  ?  ad = bc", desc: "Cross multiplication" },
+      { name: "Unitary Method", formula: "Value of 1 unit = Total value / Number of units", desc: "" },
+    ],
+  },
+  "7": {
+    "Integers & Algebra": [
+      { name: "Additive Inverse", formula: "a + (-a) = 0", desc: "" },
+      { name: "Multiplicative Inverse", formula: "a ◊ (1/a) = 1", desc: "a ? 0" },
+      { name: "Distributive Law", formula: "a(b + c) = ab + ac", desc: "" },
+      { name: "Simple Equation", formula: "ax + b = c  ?  x = (c - b) / a", desc: "" },
+    ],
+    "Lines & Angles": [
+      { name: "Complementary Angles", formula: "?A + ?B = 90∞", desc: "" },
+      { name: "Supplementary Angles", formula: "?A + ?B = 180∞", desc: "" },
+      { name: "Vertically Opposite", formula: "?A = ?C (opposite angles)", desc: "Always equal" },
+      { name: "Angles on a Line", formula: "Sum = 180∞", desc: "Linear pair" },
+      { name: "Angles at a Point", formula: "Sum = 360∞", desc: "" },
+    ],
+    "Triangle Properties": [
+      { name: "Angle Sum", formula: "?A + ?B + ?C = 180∞", desc: "Sum of angles in a triangle" },
+      { name: "Exterior Angle", formula: "Exterior ? = Sum of two non-adjacent interior angles", desc: "" },
+      { name: "Pythagoras (intro)", formula: "c≤ = a≤ + b≤", desc: "Right triangle only" },
+    ],
+    "Perimeter & Area": [
+      { name: "Perimeter of Triangle", formula: "P = a + b + c", desc: "" },
+      { name: "Area of Triangle", formula: "A = Ω ◊ b ◊ h", desc: "" },
+      { name: "Area of Parallelogram", formula: "A = base ◊ height", desc: "" },
+      { name: "Area of Rhombus", formula: "A = Ω ◊ d1 ◊ d2", desc: "d1, d2 = diagonals" },
+    ],
+    "Data Handling": [
+      { name: "Mean", formula: "Mean = Sum of observations / Number of observations", desc: "" },
+      { name: "Range", formula: "Range = Maximum value - Minimum value", desc: "" },
+      { name: "Probability (basic)", formula: "P(E) = Favourable outcomes / Total outcomes", desc: "" },
+    ],
+  },
+  "8": {
+    "Algebra": [
+      { name: "Identity 1", formula: "(a + b)≤ = a≤ + 2ab + b≤", desc: "" },
+      { name: "Identity 2", formula: "(a - b)≤ = a≤ - 2ab + b≤", desc: "" },
+      { name: "Identity 3", formula: "(a + b)(a - b) = a≤ - b≤", desc: "Difference of squares" },
+      { name: "Identity 4", formula: "(x + a)(x + b) = x≤ + (a+b)x + ab", desc: "" },
+      { name: "Identity 5", formula: "(a + b + c)≤ = a≤ + b≤ + c≤ + 2ab + 2bc + 2ca", desc: "" },
+      { name: "Identity 6", formula: "(a + b)≥ = a≥ + 3a≤b + 3ab≤ + b≥", desc: "" },
+      { name: "Identity 7", formula: "(a - b)≥ = a≥ - 3a≤b + 3ab≤ - b≥", desc: "" },
+      { name: "Identity 8", formula: "a≥ + b≥ = (a + b)(a≤ - ab + b≤)", desc: "" },
+      { name: "Identity 9", formula: "a≥ - b≥ = (a - b)(a≤ + ab + b≤)", desc: "" },
+    ],
+    "Mensuration": [
+      { name: "Area of Trapezium", formula: "A = Ω ◊ (a + b) ◊ h", desc: "a, b = parallel sides, h = height" },
+      { name: "Area of Rhombus", formula: "A = Ω ◊ d1 ◊ d2", desc: "" },
+      { name: "Surface Area of Cube", formula: "SA = 6a≤", desc: "" },
+      { name: "Surface Area of Cuboid", formula: "SA = 2(lb + bh + lh)", desc: "" },
+      { name: "Volume of Cube", formula: "V = a≥", desc: "" },
+      { name: "Volume of Cuboid", formula: "V = l ◊ b ◊ h", desc: "" },
+      { name: "Volume of Cylinder", formula: "V = pr≤h", desc: "" },
+    ],
+    "Exponents": [
+      { name: "Product Rule", formula: "a? ◊ an = a??n", desc: "" },
+      { name: "Quotient Rule", formula: "a? ˜ an = a??n", desc: "" },
+      { name: "Power Rule", formula: "(a?)n = a?n", desc: "" },
+      { name: "Zero Exponent", formula: "a∞ = 1", desc: "a ? 0" },
+      { name: "Negative Exponent", formula: "a?n = 1/an", desc: "" },
+      { name: "Fractional Exponent", formula: "a^(1/n) = nva", desc: "" },
+    ],
+    "Direct & Inverse Proportion": [
+      { name: "Direct Proportion", formula: "x/y = k (constant)  ?  x1/y1 = x2/y2", desc: "As x increases, y increases" },
+      { name: "Inverse Proportion", formula: "xy = k (constant)  ?  x1y1 = x2y2", desc: "As x increases, y decreases" },
+    ],
+  },
+  "9": {
+    "Number Systems": [
+      { name: "Irrational Number", formula: "Cannot be written as p/q (q ? 0)", desc: "e.g. v2, p, v3" },
+      { name: "Rationalisation", formula: "1/(a+vb) = (a-vb)/((a)≤-(vb)≤)", desc: "Multiply by conjugate" },
+      { name: "Laws of Radicals", formula: "va ◊ vb = v(ab)", desc: "" },
+      { name: "Radical Quotient", formula: "va / vb = v(a/b)", desc: "" },
+    ],
+    "Polynomials": [
+      { name: "Remainder Theorem", formula: "p(a) = remainder when p(x) ˜ (x - a)", desc: "" },
+      { name: "Factor Theorem", formula: "If p(a) = 0, then (x - a) is a factor of p(x)", desc: "" },
+      { name: "Algebraic Identity 1", formula: "(a+b)≤ = a≤+2ab+b≤", desc: "" },
+      { name: "Algebraic Identity 2", formula: "(a-b)≤ = a≤-2ab+b≤", desc: "" },
+      { name: "Algebraic Identity 3", formula: "a≤-b≤ = (a+b)(a-b)", desc: "" },
+      { name: "Algebraic Identity 4", formula: "a≥+b≥+c≥-3abc = (a+b+c)(a≤+b≤+c≤-ab-bc-ca)", desc: "" },
+    ],
+    "Coordinate Geometry": [
+      { name: "Cartesian Plane", formula: "Point P = (x, y)", desc: "x = abscissa, y = ordinate" },
+      { name: "Quadrants", formula: "Q1:(+,+)  Q2:(-,+)  Q3:(-,-)  Q4:(+,-)", desc: "" },
+      { name: "Distance from Origin", formula: "d = v(x≤ + y≤)", desc: "" },
+    ],
+    "Lines & Angles": [
+      { name: "Angle Sum (Triangle)", formula: "?A + ?B + ?C = 180∞", desc: "" },
+      { name: "Exterior Angle", formula: "Ext ? = Sum of two interior opposite angles", desc: "" },
+      { name: "Linear Pair", formula: "?1 + ?2 = 180∞", desc: "Adjacent angles on a straight line" },
+      { name: "Vertically Opposite", formula: "?1 = ?2", desc: "Always equal" },
+    ],
+    "Heron's Formula": [
+      { name: "Semi-perimeter", formula: "s = (a + b + c) / 2", desc: "" },
+      { name: "Area of Triangle", formula: "A = v[s(s-a)(s-b)(s-c)]", desc: "Heron's formula" },
+    ],
+    "Surface Area & Volume": [
+      { name: "Cylinder CSA", formula: "2prh", desc: "" },
+      { name: "Cylinder TSA", formula: "2pr(r+h)", desc: "" },
+      { name: "Cylinder Volume", formula: "pr≤h", desc: "" },
+      { name: "Cone CSA", formula: "prl", desc: "l = v(r≤+h≤)" },
+      { name: "Cone TSA", formula: "pr(r+l)", desc: "" },
+      { name: "Cone Volume", formula: "(1/3)pr≤h", desc: "" },
+      { name: "Sphere SA", formula: "4pr≤", desc: "" },
+      { name: "Sphere Volume", formula: "(4/3)pr≥", desc: "" },
+      { name: "Hemisphere CSA", formula: "2pr≤", desc: "" },
+      { name: "Hemisphere TSA", formula: "3pr≤", desc: "" },
+      { name: "Hemisphere Volume", formula: "(2/3)pr≥", desc: "" },
+    ],
+    "Statistics": [
+      { name: "Mean", formula: "xØ = Sx / n", desc: "Sum of all values / count" },
+      { name: "Median (odd n)", formula: "Middle value after sorting", desc: "" },
+      { name: "Median (even n)", formula: "Average of two middle values", desc: "" },
+      { name: "Mode", formula: "Most frequently occurring value", desc: "" },
+    ],
+  },
+  "10": {
+    "Algebra": [
+      { name: "Quadratic Formula", formula: "x = (-b ± v(b≤-4ac)) / 2a", desc: "Roots of ax≤ + bx + c = 0" },
+      { name: "Discriminant", formula: "D = b≤ - 4ac", desc: "D>0: two real roots | D=0: one root | D<0: no real roots" },
+      { name: "Sum of Roots", formula: "a + ﬂ = -b/a", desc: "" },
+      { name: "Product of Roots", formula: "a ◊ ﬂ = c/a", desc: "" },
+      { name: "AP nth Term", formula: "a? = a + (n-1)d", desc: "a = first term, d = common difference" },
+      { name: "AP Sum", formula: "S? = n/2 ◊ [2a + (n-1)d]", desc: "" },
+      { name: "AP Sum (last term)", formula: "S? = n/2 ◊ (a + l)", desc: "l = last term" },
+      { name: "GP nth Term", formula: "a? = a ◊ rn?π", desc: "r = common ratio" },
+      { name: "GP Sum (finite)", formula: "S? = a(rn - 1)/(r - 1)", desc: "r ? 1" },
+    ],
+    "Coordinate Geometry": [
+      { name: "Distance Formula", formula: "d = v[(x2-x1)≤ + (y2-y1)≤]", desc: "" },
+      { name: "Section Formula", formula: "P = ((mx2+nx1)/(m+n), (my2+ny1)/(m+n))", desc: "Divides in ratio m:n" },
+      { name: "Midpoint Formula", formula: "M = ((x1+x2)/2, (y1+y2)/2)", desc: "" },
+      { name: "Area of Triangle", formula: "A = Ω|x1(y2-y3) + x2(y3-y1) + x3(y1-y2)|", desc: "" },
+      { name: "Slope of Line", formula: "m = (y2-y1)/(x2-x1)", desc: "" },
+      { name: "Equation of Line", formula: "y - y1 = m(x - x1)", desc: "Point-slope form" },
+    ],
+    "Trigonometry": [
+      { name: "sin ?", formula: "Opposite / Hypotenuse", desc: "" },
+      { name: "cos ?", formula: "Adjacent / Hypotenuse", desc: "" },
+      { name: "tan ?", formula: "Opposite / Adjacent = sin ? / cos ?", desc: "" },
+      { name: "cosec ?", formula: "1 / sin ?", desc: "" },
+      { name: "sec ?", formula: "1 / cos ?", desc: "" },
+      { name: "cot ?", formula: "1 / tan ? = cos ? / sin ?", desc: "" },
+      { name: "Identity 1", formula: "sin≤? + cos≤? = 1", desc: "Most important" },
+      { name: "Identity 2", formula: "1 + tan≤? = sec≤?", desc: "" },
+      { name: "Identity 3", formula: "1 + cot≤? = cosec≤?", desc: "" },
+      { name: "Complementary", formula: "sin(90∞-?) = cos?, cos(90∞-?) = sin?", desc: "" },
+      { name: "Complementary 2", formula: "tan(90∞-?) = cot?, sec(90∞-?) = cosec?", desc: "" },
+    ],
+    "Statistics": [
+      { name: "Mean (Direct)", formula: "xØ = Sf?x? / Sf?", desc: "" },
+      { name: "Mean (Assumed Mean)", formula: "xØ = a + (Sf?d? / Sf?)", desc: "d = x - a" },
+      { name: "Mean (Step Deviation)", formula: "xØ = a + h ◊ (Sf?u? / Sf?)", desc: "u = (x-a)/h" },
+      { name: "Median", formula: "M = l + [(n/2 - cf) / f] ◊ h", desc: "l=lower limit, cf=cumulative freq" },
+      { name: "Mode", formula: "Mo = l + [(f1-f0) / (2f1-f0-f2)] ◊ h", desc: "" },
+      { name: "Empirical Relation", formula: "Mode = 3 Median - 2 Mean", desc: "" },
+    ],
+    "Surface Area & Volume": [
+      { name: "Cube SA", formula: "6a≤", desc: "" },
+      { name: "Cube Volume", formula: "a≥", desc: "" },
+      { name: "Cuboid SA", formula: "2(lb + bh + lh)", desc: "" },
+      { name: "Cuboid Volume", formula: "lbh", desc: "" },
+      { name: "Cylinder CSA", formula: "2prh", desc: "" },
+      { name: "Cylinder TSA", formula: "2pr(r+h)", desc: "" },
+      { name: "Cylinder Volume", formula: "pr≤h", desc: "" },
+      { name: "Cone CSA", formula: "prl", desc: "l = v(r≤+h≤)" },
+      { name: "Cone TSA", formula: "pr(r+l)", desc: "" },
+      { name: "Cone Volume", formula: "(1/3)pr≤h", desc: "" },
+      { name: "Sphere SA", formula: "4pr≤", desc: "" },
+      { name: "Sphere Volume", formula: "(4/3)pr≥", desc: "" },
+      { name: "Hemisphere CSA", formula: "2pr≤", desc: "" },
+      { name: "Hemisphere TSA", formula: "3pr≤", desc: "" },
+      { name: "Hemisphere Volume", formula: "(2/3)pr≥", desc: "" },
+    ],
+    "Circles": [
+      { name: "Area of Sector", formula: "A = (?/360) ◊ pr≤", desc: "? in degrees" },
+      { name: "Length of Arc", formula: "l = (?/360) ◊ 2pr", desc: "" },
+      { name: "Area of Segment", formula: "A = Area of sector - Area of triangle", desc: "" },
+      { name: "Tangent Length", formula: "PT = v(d≤ - r≤)", desc: "d = distance from external point to centre" },
+    ],
+    "Probability": [
+      { name: "Probability", formula: "P(E) = Favourable outcomes / Total outcomes", desc: "0 = P(E) = 1" },
+      { name: "Complementary", formula: "P(E) = 1 - P(E)", desc: "" },
+    ],
+  },
+  "11": {
+    "Sets": [
+      { name: "Union", formula: "n(A ? B) = n(A) + n(B) - n(A n B)", desc: "" },
+      { name: "Complement", formula: "A' = U - A", desc: "U = Universal set" },
+      { name: "De Morgan 1", formula: "(A ? B)' = A' n B'", desc: "" },
+      { name: "De Morgan 2", formula: "(A n B)' = A' ? B'", desc: "" },
+    ],
+    "Trigonometry": [
+      { name: "sin(A+B)", formula: "sinA cosB + cosA sinB", desc: "" },
+      { name: "sin(A-B)", formula: "sinA cosB - cosA sinB", desc: "" },
+      { name: "cos(A+B)", formula: "cosA cosB - sinA sinB", desc: "" },
+      { name: "cos(A-B)", formula: "cosA cosB + sinA sinB", desc: "" },
+      { name: "tan(A+B)", formula: "(tanA + tanB) / (1 - tanA tanB)", desc: "" },
+      { name: "tan(A-B)", formula: "(tanA - tanB) / (1 + tanA tanB)", desc: "" },
+      { name: "sin 2A", formula: "2 sinA cosA", desc: "Double angle" },
+      { name: "cos 2A", formula: "cos≤A - sin≤A = 1 - 2sin≤A = 2cos≤A - 1", desc: "" },
+      { name: "tan 2A", formula: "2 tanA / (1 - tan≤A)", desc: "" },
+      { name: "sin 3A", formula: "3 sinA - 4 sin≥A", desc: "" },
+      { name: "cos 3A", formula: "4 cos≥A - 3 cosA", desc: "" },
+      { name: "sinC + sinD", formula: "2 sin((C+D)/2) cos((C-D)/2)", desc: "Sum to product" },
+      { name: "sinC - sinD", formula: "2 cos((C+D)/2) sin((C-D)/2)", desc: "" },
+      { name: "cosC + cosD", formula: "2 cos((C+D)/2) cos((C-D)/2)", desc: "" },
+      { name: "cosC - cosD", formula: "-2 sin((C+D)/2) sin((C-D)/2)", desc: "" },
+      { name: "Sine Rule", formula: "a/sinA = b/sinB = c/sinC = 2R", desc: "R = circumradius" },
+      { name: "Cosine Rule", formula: "a≤ = b≤ + c≤ - 2bc cosA", desc: "" },
+    ],
+    "Sequences & Series": [
+      { name: "AP nth Term", formula: "a? = a + (n-1)d", desc: "" },
+      { name: "AP Sum", formula: "S? = n/2[2a + (n-1)d]", desc: "" },
+      { name: "GP nth Term", formula: "a? = arn?π", desc: "" },
+      { name: "GP Sum", formula: "S? = a(rn-1)/(r-1)", desc: "r ? 1" },
+      { name: "GP Infinite Sum", formula: "S8 = a/(1-r)", desc: "|r| < 1" },
+      { name: "Sum of n natural numbers", formula: "Sn = n(n+1)/2", desc: "" },
+      { name: "Sum of squares", formula: "Sn≤ = n(n+1)(2n+1)/6", desc: "" },
+      { name: "Sum of cubes", formula: "Sn≥ = [n(n+1)/2]≤", desc: "" },
+    ],
+    "Straight Lines": [
+      { name: "Slope", formula: "m = (y2-y1)/(x2-x1) = tan?", desc: "" },
+      { name: "Slope-intercept form", formula: "y = mx + c", desc: "c = y-intercept" },
+      { name: "Point-slope form", formula: "y - y1 = m(x - x1)", desc: "" },
+      { name: "Two-point form", formula: "(y-y1)/(y2-y1) = (x-x1)/(x2-x1)", desc: "" },
+      { name: "Intercept form", formula: "x/a + y/b = 1", desc: "a,b = intercepts" },
+      { name: "Normal form", formula: "x cos? + y sin? = p", desc: "" },
+      { name: "Distance: Point to Line", formula: "d = |ax1+by1+c| / v(a≤+b≤)", desc: "" },
+      { name: "Angle between lines", formula: "tan? = |(m1-m2)/(1+m1m2)|", desc: "" },
+      { name: "Parallel lines", formula: "m1 = m2", desc: "" },
+      { name: "Perpendicular lines", formula: "m1 ◊ m2 = -1", desc: "" },
+    ],
+    "Permutations & Combinations": [
+      { name: "Factorial", formula: "n! = n ◊ (n-1) ◊ ... ◊ 2 ◊ 1", desc: "0! = 1" },
+      { name: "Permutation", formula: "nPr = n! / (n-r)!", desc: "Ordered arrangement" },
+      { name: "Combination", formula: "nCr = n! / (r!(n-r)!)", desc: "Unordered selection" },
+      { name: "Relation", formula: "nPr = r! ◊ nCr", desc: "" },
+      { name: "Binomial Theorem", formula: "(a+b)n = S nCr ◊ an?? ◊ b?", desc: "r from 0 to n" },
+      { name: "General Term", formula: "T??1 = nCr ◊ an?? ◊ b?", desc: "" },
+    ],
+    "Statistics": [
+      { name: "Variance", formula: "s≤ = S(x? - xØ)≤ / n", desc: "" },
+      { name: "Standard Deviation", formula: "s = v[S(x? - xØ)≤ / n]", desc: "" },
+      { name: "Coefficient of Variation", formula: "CV = (s / xØ) ◊ 100", desc: "%" },
+    ],
+  },
+  "12": {
+    "Calculus ó Derivatives": [
+      { name: "First Principle", formula: "f'(x) = lim[h?0] (f(x+h)-f(x))/h", desc: "" },
+      { name: "d/dx (xn)", formula: "nxn?π", desc: "Power rule" },
+      { name: "d/dx (e?)", formula: "e?", desc: "" },
+      { name: "d/dx (a?)", formula: "a? ln a", desc: "" },
+      { name: "d/dx (ln x)", formula: "1/x", desc: "" },
+      { name: "d/dx (sin x)", formula: "cos x", desc: "" },
+      { name: "d/dx (cos x)", formula: "-sin x", desc: "" },
+      { name: "d/dx (tan x)", formula: "sec≤x", desc: "" },
+      { name: "d/dx (cot x)", formula: "-cosec≤x", desc: "" },
+      { name: "d/dx (sec x)", formula: "sec x tan x", desc: "" },
+      { name: "d/dx (cosec x)", formula: "-cosec x cot x", desc: "" },
+      { name: "d/dx (sin?πx)", formula: "1/v(1-x≤)", desc: "" },
+      { name: "d/dx (cos?πx)", formula: "-1/v(1-x≤)", desc: "" },
+      { name: "d/dx (tan?πx)", formula: "1/(1+x≤)", desc: "" },
+      { name: "Product Rule", formula: "d/dx(uv) = u∑v' + v∑u'", desc: "" },
+      { name: "Quotient Rule", formula: "d/dx(u/v) = (v∑u' - u∑v') / v≤", desc: "" },
+      { name: "Chain Rule", formula: "dy/dx = (dy/du)(du/dx)", desc: "" },
+    ],
+    "Calculus ó Integrals": [
+      { name: "?xn dx", formula: "xn?π/(n+1) + C", desc: "n ? -1" },
+      { name: "?1/x dx", formula: "ln|x| + C", desc: "" },
+      { name: "?e? dx", formula: "e? + C", desc: "" },
+      { name: "?a? dx", formula: "a?/ln a + C", desc: "" },
+      { name: "?sin x dx", formula: "-cos x + C", desc: "" },
+      { name: "?cos x dx", formula: "sin x + C", desc: "" },
+      { name: "?tan x dx", formula: "ln|sec x| + C", desc: "" },
+      { name: "?cot x dx", formula: "ln|sin x| + C", desc: "" },
+      { name: "?sec x dx", formula: "ln|sec x + tan x| + C", desc: "" },
+      { name: "?sec≤x dx", formula: "tan x + C", desc: "" },
+      { name: "?cosec≤x dx", formula: "-cot x + C", desc: "" },
+      { name: "?1/(1+x≤) dx", formula: "tan?πx + C", desc: "" },
+      { name: "?1/v(1-x≤) dx", formula: "sin?πx + C", desc: "" },
+      { name: "Integration by Parts", formula: "?u∑v dx = u?v dx - ?(u'∑?v dx) dx", desc: "ILATE rule" },
+      { name: "Definite Integral", formula: "?[a to b] f(x)dx = F(b) - F(a)", desc: "" },
+      { name: "Area under curve", formula: "A = ?[a to b] |f(x)| dx", desc: "" },
+    ],
+    "Matrices & Determinants": [
+      { name: "Determinant 2◊2", formula: "|A| = ad - bc", desc: "A = [[a,b],[c,d]]" },
+      { name: "Determinant 3◊3", formula: "Expand along any row or column", desc: "" },
+      { name: "Inverse", formula: "A?π = adj(A) / |A|", desc: "|A| ? 0" },
+      { name: "Cramer's Rule", formula: "x=D1/D, y=D2/D, z=D3/D", desc: "" },
+      { name: "Properties", formula: "|AB| = |A||B|", desc: "" },
+      { name: "Transpose", formula: "(AB)? = B?A?", desc: "" },
+    ],
+    "Vectors": [
+      { name: "Magnitude", formula: "|a?| = v(x≤+y≤+z≤)", desc: "" },
+      { name: "Unit Vector", formula: "‚ = a?/|a?|", desc: "" },
+      { name: "Dot Product", formula: "a?∑b? = |a||b|cos? = x1x2+y1y2+z1z2", desc: "" },
+      { name: "Cross Product |", formula: "|a?◊b?| = |a||b|sin?", desc: "" },
+      { name: "Angle between vectors", formula: "cos? = (a?∑b?)/(|a?||b?|)", desc: "" },
+      { name: "Perpendicular", formula: "a?∑b? = 0", desc: "" },
+      { name: "Parallel", formula: "a?◊b? = 0?", desc: "" },
+      { name: "Projection of a on b", formula: "(a?∑b?)/|b?|", desc: "" },
+    ],
+    "3D Geometry": [
+      { name: "Distance Formula", formula: "d = v[(x2-x1)≤+(y2-y1)≤+(z2-z1)≤]", desc: "" },
+      { name: "Direction Cosines", formula: "l≤+m≤+n≤ = 1", desc: "" },
+      { name: "Line (symmetric)", formula: "(x-x1)/a = (y-y1)/b = (z-z1)/c", desc: "" },
+      { name: "Plane (general)", formula: "ax+by+cz+d = 0", desc: "" },
+      { name: "Distance: Point to Plane", formula: "d = |ax1+by1+cz1+d|/v(a≤+b≤+c≤)", desc: "" },
+      { name: "Angle between planes", formula: "cos? = |a1a2+b1b2+c1c2|/(v(a1≤+b1≤+c1≤)∑v(a2≤+b2≤+c2≤))", desc: "" },
+    ],
+    "Probability": [
+      { name: "Conditional", formula: "P(A|B) = P(AnB)/P(B)", desc: "" },
+      { name: "Multiplication Rule", formula: "P(AnB) = P(A)∑P(B|A)", desc: "" },
+      { name: "Bayes Theorem", formula: "P(A?|B) = P(A?)P(B|A?)/SP(A?)P(B|A?)", desc: "" },
+      { name: "Independent Events", formula: "P(AnB) = P(A)∑P(B)", desc: "" },
+      { name: "Binomial Mean", formula: "µ = np", desc: "" },
+      { name: "Binomial Variance", formula: "s≤ = npq", desc: "q = 1-p" },
+      { name: "Binomial P(X=r)", formula: "nCr ◊ p? ◊ qn??", desc: "" },
+    ],
+    "Linear Programming": [
+      { name: "Objective Function", formula: "Z = ax + by", desc: "Maximize or minimize" },
+      { name: "Corner Point Method", formula: "Evaluate Z at each vertex of feasible region", desc: "" },
+    ],
+  },
+};
+
+// -- Color themes -------------------------------------------------------------
 const colors = [
-  { bg: 'bg-blue-50', border: 'border-blue-400', badge: 'bg-blue-100 text-blue-700', icon: 'üìê' },
-  { bg: 'bg-green-50', border: 'border-green-400', badge: 'bg-green-100 text-green-700', icon: 'üìä' },
-  { bg: 'bg-purple-50', border: 'border-purple-400', badge: 'bg-purple-100 text-purple-700', icon: 'üìè' },
-  { bg: 'bg-orange-50', border: 'border-orange-400', badge: 'bg-orange-100 text-orange-700', icon: 'üî¢' },
-  { bg: 'bg-pink-50', border: 'border-pink-400', badge: 'bg-pink-100 text-pink-700', icon: 'üìà' },
-  { bg: 'bg-teal-50', border: 'border-teal-400', badge: 'bg-teal-100 text-teal-700', icon: 'üßÆ' },
-  { bg: 'bg-yellow-50', border: 'border-yellow-400', badge: 'bg-yellow-100 text-yellow-700', icon: '‚ö°' },
+  { bg: "bg-blue-50",   border: "border-blue-400",   badge: "bg-blue-100 text-blue-700",   icon: "??" },
+  { bg: "bg-green-50",  border: "border-green-400",  badge: "bg-green-100 text-green-700", icon: "??" },
+  { bg: "bg-purple-50", border: "border-purple-400", badge: "bg-purple-100 text-purple-700",icon: "??" },
+  { bg: "bg-orange-50", border: "border-orange-400", badge: "bg-orange-100 text-orange-700",icon: "??" },
+  { bg: "bg-pink-50",   border: "border-pink-400",   badge: "bg-pink-100 text-pink-700",   icon: "??" },
+  { bg: "bg-teal-50",   border: "border-teal-400",   badge: "bg-teal-100 text-teal-700",   icon: "??" },
+  { bg: "bg-yellow-50", border: "border-yellow-400", badge: "bg-yellow-100 text-yellow-700",icon: "?" },
+  { bg: "bg-red-50",    border: "border-red-400",    badge: "bg-red-100 text-red-700",     icon: "??" },
 ];
 
+// -- Reusable Table Component --------------------------------------------------
+function DataTable({ title, headers, rows, icon }) {
+  return (
+    <div className="bg-white rounded-2xl shadow-sm mb-6 overflow-hidden border border-gray-100">
+      <div className="bg-indigo-600 px-5 py-3 flex items-center gap-2">
+        <span className="text-xl">{icon}</span>
+        <h2 className="text-white font-bold text-base">{title}</h2>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-indigo-50">
+              {headers.map((h, i) => (
+                <th key={i} className="px-4 py-2.5 text-left font-bold text-indigo-700 border-b border-indigo-100">{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => (
+              <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                {row.map((cell, j) => (
+                  <td key={j} className={`px-4 py-2.5 border-b border-gray-100 font-mono text-sm ${j === 0 ? "font-bold text-gray-700" : "text-indigo-700"}`}>
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// -- Main Component ------------------------------------------------------------
 function FormulaSheet() {
-  const [selectedClass, setSelectedClass] = useState('10');
-  const [search, setSearch] = useState('');
-  const [copied, setCopied] = useState('');
+  const [selectedClass, setSelectedClass] = useState("10");
+  const [search, setSearch] = useState("");
+  const [copied, setCopied] = useState("");
+  const [activeTab, setActiveTab] = useState("formulas");
 
-  const data = formulaData[selectedClass];
+  const data = formulaData[selectedClass] || {};
 
-  // Filter by search
   const filtered = Object.entries(data).reduce((acc, [chapter, formulas]) => {
     const q = search.toLowerCase();
     const matched = formulas.filter(f =>
@@ -174,121 +472,144 @@ function FormulaSheet() {
   const copyFormula = (formula, name) => {
     navigator.clipboard.writeText(formula).then(() => {
       setCopied(name);
-      setTimeout(() => setCopied(''), 2000);
+      setTimeout(() => setCopied(""), 2000);
     });
   };
 
   const totalFormulas = Object.values(data).reduce((a, b) => a + b.length, 0);
+  const showTables = ["10", "11", "12"].includes(selectedClass);
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">üìê Maths Formula Sheet</h1>
-        <p className="text-gray-500 mt-1">All important formulas for CBSE Board Exams</p>
+        <h1 className="text-3xl font-bold text-gray-800">?? Maths Formula Sheet</h1>
+        <p className="text-gray-500 mt-1">Complete CBSE formulas for Classes 6ñ12</p>
       </div>
 
-      {/* Class Selector + Stats */}
+      {/* Controls */}
       <div className="bg-white rounded-2xl shadow-md p-5 mb-6">
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-          {/* Class Tabs */}
-          <div className="flex gap-3">
-            {['10', '12'].map(cls => (
-              <button key={cls}
-                onClick={() => { setSelectedClass(cls); setSearch(''); }}
-                className={`px-6 py-2.5 rounded-xl font-bold text-sm transition ${
-                  selectedClass === cls
-                    ? 'bg-indigo-600 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}>
-                Class {cls}
+        {/* Class Selector */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {["6","7","8","9","10","11","12"].map(cls => (
+            <button key={cls}
+              onClick={() => { setSelectedClass(cls); setSearch(""); setActiveTab("formulas"); }}
+              className={`px-4 py-2 rounded-xl font-bold text-sm transition ${
+                selectedClass === cls
+                  ? "bg-indigo-600 text-white shadow-md"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}>
+              Class {cls}
+            </button>
+          ))}
+        </div>
+
+        {/* Stats */}
+        <div className="flex gap-4 mb-4">
+          <div className="bg-indigo-50 px-4 py-2 rounded-xl text-center">
+            <div className="text-xl font-bold text-indigo-600">{totalFormulas}</div>
+            <div className="text-xs text-gray-500">Formulas</div>
+          </div>
+          <div className="bg-green-50 px-4 py-2 rounded-xl text-center">
+            <div className="text-xl font-bold text-green-600">{Object.keys(data).length}</div>
+            <div className="text-xs text-gray-500">Topics</div>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex gap-2 mb-4">
+          <button onClick={() => setActiveTab("formulas")}
+            className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${activeTab === "formulas" ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+            ?? Formulas
+          </button>
+          {showTables && (
+            <>
+              <button onClick={() => setActiveTab("trig")}
+                className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${activeTab === "trig" ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                ?? Trig Table
               </button>
-            ))}
-          </div>
-
-          {/* Stats */}
-          <div className="flex gap-4 text-center">
-            <div className="bg-indigo-50 px-4 py-2 rounded-xl">
-              <div className="text-xl font-bold text-indigo-600">{totalFormulas}</div>
-              <div className="text-xs text-gray-500">Formulas</div>
-            </div>
-            <div className="bg-green-50 px-4 py-2 rounded-xl">
-              <div className="text-xl font-bold text-green-600">{Object.keys(data).length}</div>
-              <div className="text-xs text-gray-500">Chapters</div>
-            </div>
-          </div>
+              <button onClick={() => setActiveTab("squares")}
+                className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${activeTab === "squares" ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                ?? Squares & Cubes
+              </button>
+              <button onClick={() => setActiveTab("mensuration")}
+                className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${activeTab === "mensuration" ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
+                ?? Mensuration
+              </button>
+            </>
+          )}
         </div>
 
-        {/* Search */}
-        <div className="mt-4">
-          <input
-            type="text"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="üîç Search formula, topic, or keyword..."
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 text-sm"
-          />
-        </div>
+        {/* Search (only on formulas tab) */}
+        {activeTab === "formulas" && (
+          <input type="text" value={search} onChange={e => setSearch(e.target.value)}
+            placeholder="?? Search formula, topic, or keyword..."
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 text-sm" />
+        )}
       </div>
 
-      {/* Formula Sections */}
-      {Object.entries(filtered).length === 0 ? (
-        <div className="text-center py-16 text-gray-400">
-          <div className="text-5xl mb-3">üîç</div>
-          <p className="text-lg">No formulas found for "{search}"</p>
-        </div>
-      ) : (
-        Object.entries(filtered).map(([chapter, formulas], idx) => {
-          const theme = colors[idx % colors.length];
-          return (
-            <div key={chapter} className={`${theme.bg} rounded-2xl border-l-4 ${theme.border} shadow-sm mb-6 overflow-hidden`}>
-              {/* Chapter Header */}
-              <div className="px-6 py-4 flex items-center gap-3">
-                <span className="text-2xl">{theme.icon}</span>
-                <div>
-                  <h2 className="text-lg font-bold text-gray-800">{chapter}</h2>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${theme.badge}`}>
-                    {formulas.length} formula{formulas.length > 1 ? 's' : ''}
-                  </span>
-                </div>
-              </div>
-
-              {/* Formulas Grid */}
-              <div className="px-4 pb-4 grid grid-cols-1 md:grid-cols-2 gap-3">
-                {formulas.map((f, i) => (
-                  <div key={i}
-                    className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition group relative">
-                    {/* Copy button */}
-                    <button
-                      onClick={() => copyFormula(f.formula, f.name)}
-                      className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition text-xs bg-gray-100 hover:bg-indigo-100 text-gray-500 hover:text-indigo-600 px-2 py-1 rounded-lg"
-                      title="Copy formula">
-                      {copied === f.name ? '‚úÖ Copied!' : 'üìã Copy'}
-                    </button>
-
-                    {/* Formula Name */}
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">{f.name}</p>
-
-                    {/* Formula */}
-                    <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mb-2">
-                      <code className="text-indigo-700 font-bold text-sm break-all">{f.formula}</code>
-                    </div>
-
-                    {/* Description */}
-                    {f.desc && (
-                      <p className="text-xs text-gray-500 leading-relaxed">{f.desc}</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        })
+      {/* -- TRIG TABLE -- */}
+      {activeTab === "trig" && (
+        <DataTable title="Trigonometric Values Table" icon="??"
+          headers={trigTable.headers} rows={trigTable.rows} />
       )}
 
-      {/* Footer tip */}
+      {/* -- SQUARES TABLE -- */}
+      {activeTab === "squares" && (
+        <DataTable title="Squares, Cubes & Square Roots (1ñ20)" icon="??"
+          headers={squaresTable.headers} rows={squaresTable.rows} />
+      )}
+
+      {/* -- MENSURATION TABLE -- */}
+      {activeTab === "mensuration" && (
+        <DataTable title="Mensuration Quick Reference" icon="??"
+          headers={mensurationTable.headers} rows={mensurationTable.rows} />
+      )}
+
+      {/* -- FORMULAS -- */}
+      {activeTab === "formulas" && (
+        Object.entries(filtered).length === 0 ? (
+          <div className="text-center py-16 text-gray-400">
+            <div className="text-5xl mb-3">??</div>
+            <p className="text-lg">No formulas found for "{search}"</p>
+          </div>
+        ) : (
+          Object.entries(filtered).map(([chapter, formulas], idx) => {
+            const theme = colors[idx % colors.length];
+            return (
+              <div key={chapter} className={`${theme.bg} rounded-2xl border-l-4 ${theme.border} shadow-sm mb-6 overflow-hidden`}>
+                <div className="px-6 py-4 flex items-center gap-3">
+                  <span className="text-2xl">{theme.icon}</span>
+                  <div>
+                    <h2 className="text-lg font-bold text-gray-800">{chapter}</h2>
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${theme.badge}`}>
+                      {formulas.length} formula{formulas.length > 1 ? "s" : ""}
+                    </span>
+                  </div>
+                </div>
+                <div className="px-4 pb-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {formulas.map((f, i) => (
+                    <div key={i} className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition group relative">
+                      <button onClick={() => copyFormula(f.formula, f.name)}
+                        className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition text-xs bg-gray-100 hover:bg-indigo-100 text-gray-500 hover:text-indigo-600 px-2 py-1 rounded-lg">
+                        {copied === f.name ? "? Copied!" : "?? Copy"}
+                      </button>
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">{f.name}</p>
+                      <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mb-2">
+                        <code className="text-indigo-700 font-bold text-sm break-all">{f.formula}</code>
+                      </div>
+                      {f.desc && <p className="text-xs text-gray-500 leading-relaxed">{f.desc}</p>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })
+        )
+      )}
+
       <div className="text-center mt-6 text-sm text-gray-400">
-        üí° Hover over any formula card to copy it ‚Ä¢ Click the formula to use in AI Tutor
+        ?? Hover over any formula card to copy it ï Use tabs to view tables
       </div>
     </div>
   );

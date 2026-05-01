@@ -51,7 +51,7 @@ function App() {
           <Route path="/courses/:subject" element={isAuthenticated ? <ChapterView /> : <Navigate to="/login" />} />
           <Route path="/quiz/:subject" element={isAuthenticated ? <Quiz /> : <Navigate to="/login" />} />
           <Route path="/ask" element={isAuthenticated ? <AskAI user={user} /> : <Navigate to="/login" />} />
-          <Route path="/formulas" element={<FormulaSheet />} />
+          <Route path="/formulas" element={isAuthenticated ? <FormulaSheet /> : <Navigate to="/login" />} />
         </Routes>
       </div>
     </Router>
